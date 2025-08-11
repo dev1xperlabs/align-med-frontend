@@ -15,23 +15,18 @@ export const MetricsGrid: React.FC<MetricsGridProps> = ({
   gap = 3,
   sx = {},
 }) => {
-  const gridColumns = data.length;
-
   return (
     <Box
       sx={{
         display: "grid",
-        gridTemplateColumns: `repeat(${gridColumns}, 1fr)`,
         gap: gap,
         width: "100%",
         marginTop: 2,
 
-        "@media (max-width: 900px)": {
-          gridTemplateColumns:
-            data.length > 2 ? "repeat(2, 1fr)" : `repeat(${gridColumns}, 1fr)`,
-        },
-        "@media (max-width: 600px)": {
-          gridTemplateColumns: "1fr",
+        gridTemplateColumns: {
+          xs: "1fr",
+          sm: "repeat(2, 1fr)",
+          md: `repeat(${Math.min(data.length, 4)}, 1fr)`,
         },
         ...sx,
       }}
@@ -39,14 +34,10 @@ export const MetricsGrid: React.FC<MetricsGridProps> = ({
       {data.map((metric, index) => (
         <MetricCard
           key={`${metric.title}-${index}`}
-          title={metric.title}
-          value={metric.value}
-          change={metric.change}
-          trend={metric.trend}
-          unit={metric.unit}
-          customSubText={metric.customSubText}
+          {...metric}
+          sx={{ minHeight: 150 }}
         />
       ))}
     </Box>
-  );  
+  );
 };

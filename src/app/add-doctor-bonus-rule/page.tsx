@@ -82,7 +82,10 @@ export default function AddDoctorBonusRulePage() {
     error: doctorsError,
   } = useQuery<iDoctor[], Error>({
     queryKey: ["doctors"],
-    queryFn: () => api.getDoctors(),
+    queryFn: async () => {
+      const data = await api.getDoctors();
+      return data.slice().sort((a, b) => a.name.localeCompare(b.name));
+    },
   });
 
   const {
@@ -91,7 +94,10 @@ export default function AddDoctorBonusRulePage() {
     error: attorneysError,
   } = useQuery<iAttorney[], Error>({
     queryKey: ["attorneys"],
-    queryFn: () => api.getAttorneys(),
+    queryFn: async () => {
+      const data = await api.getAttorneys();
+      return data.slice().sort((a, b) => a.name.localeCompare(b.name));
+    },
   });
 
   // Optimized: Memoize data maps only when data changes
@@ -665,7 +671,7 @@ export default function AddDoctorBonusRulePage() {
               </StyledTable>
 
               <TablePagination
-                rowsPerPageOptions={[5, 10]}
+                rowsPerPageOptions={[5, 10, 15]}
                 component="div"
                 count={filteredRules.length}
                 rowsPerPage={rowsPerPage}

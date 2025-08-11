@@ -72,6 +72,9 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     5: "#FF5722", // Deep Orange
     6: "#607D8B", // Blue Grey
     7: "#795548", // Brown
+    8: "#3F51B5", // Indigo
+    9: "#00BCD4", // Cyan
+    10: "#8BC34A", // Light Green
   };
 
   // Helper function to parse formatted values from backend

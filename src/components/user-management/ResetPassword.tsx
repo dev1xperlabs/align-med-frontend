@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -9,6 +9,8 @@ import {
   DialogContent,
   DialogTitle,
   FormHelperText,
+  IconButton,
+  InputAdornment,
   TextField,
   Typography,
   useTheme,
@@ -18,6 +20,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { toast } from "react-toastify";
 import { ResetPasswordDto } from "@/app/user-management/interface/user-management";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 interface ResetPasswordProps {
   userId: number;
@@ -33,6 +36,7 @@ const ResetPassword = ({
   const theme = useTheme();
   const queryClient = useQueryClient();
 
+  const [showPassword, setShowPassword] = useState(false);
   const [resetPasswordDto, setResetPasswordDto] = useState<ResetPasswordDto>({
     user_id: userId,
     password: "",
@@ -75,6 +79,19 @@ const ResetPassword = ({
     }
     resetPasswordMutation.mutate(resetPasswordDto);
   };
+
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  useEffect(() => {
+    if (openResetPassword) {
+      setResetPasswordDto({
+        user_id: userId,
+        password: "",
+      });
+    }
+  }, [openResetPassword, userId]);
 
   return (
     <Dialog
@@ -121,12 +138,32 @@ const ResetPassword = ({
           </Typography>
           <TextField
             fullWidth
-            type="password"
+            type={showPassword ? "text" : "password"}
             placeholder="Enter new password"
             size="medium"
             value={resetPasswordDto.password}
             onChange={(e) => handleResetPasswordChange(e.target.value)}
             error={!!resetFormError}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    edge="end"
+                    size="small"
+                    sx={{
+                      color: "#6c757d",
+                      "&:hover": {
+                        color: theme.palette.primary.main,
+                      },
+                    }}
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
           {resetFormError && (
             <FormHelperText error sx={{ mt: 0.5, ml: 0 }}>

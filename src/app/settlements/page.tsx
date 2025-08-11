@@ -50,7 +50,11 @@ export default function SettlementsPage() {
   }, [attorneysList]);
 
   const attorneyOptions = useMemo(
-    () => attorneysList.map((a) => a.name),
+    () =>
+      attorneysList
+        ?.slice()
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map((a) => a.name),
     [attorneysList]
   );
 

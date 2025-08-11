@@ -184,7 +184,7 @@ export const List = ({
             count={userListDto?.totalRecords || 0}
             page={userListDto?.startIndex ? userListDto?.startIndex - 1 : 0}
             rowsPerPage={userListDto?.pageSize || 10}
-            rowsPerPageOptions={[5, 10, 20, 50]}
+            rowsPerPageOptions={[5, 10, 15]}
             onPageChange={(_, newPage) => setStartIndex(newPage)}
             onRowsPerPageChange={(e) => {
               setPageSize(parseInt(e.target.value, 10));

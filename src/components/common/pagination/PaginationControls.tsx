@@ -10,7 +10,7 @@ export default function PaginationControls({
 }: iPaginationControlsProps) {
   return (
     <TablePagination
-      rowsPerPageOptions={[5, 10]}
+      rowsPerPageOptions={[5, 10, 15]}
       component="div"
       count={count}
       rowsPerPage={rowsPerPage}

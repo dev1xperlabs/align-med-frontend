@@ -13,6 +13,8 @@ import {
   FormHelperText,
   MenuItem,
   useTheme,
+  InputAdornment,
+  IconButton,
 } from "@mui/material";
 import {
   Person,
@@ -21,6 +23,8 @@ import {
   CheckCircle,
   Cancel,
   Lock,
+  VisibilityOff,
+  Visibility,
 } from "@mui/icons-material";
 import { red } from "@mui/material/colors";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -60,6 +64,8 @@ export default function CreateUser({
   const [editingUser, setEditingUser] = useState<User | null>(
     userToEdit || null
   );
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const [createUserDto, setCreateUserDto] = useState<CreateUserDto>({
     first_name: "",
@@ -131,6 +137,10 @@ export default function CreateUser({
   const handleSaveUser = () => {
     if (!validateForm()) return;
     createUserMutation.mutate(createUserDto);
+  };
+
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
   };
 
   const emptyFeilds = () => {
@@ -206,7 +216,13 @@ export default function CreateUser({
                   </Typography>
                   <TextField
                     fullWidth
-                    type={field === "password" ? "password" : "text"}
+                    type={
+                      field === "password"
+                        ? showPassword
+                          ? "text"
+                          : "password"
+                        : "text"
+                    }
                     size="medium"
                     value={createUserDto[field]}
                     onChange={(e) => handleFieldChange(field, e.target.value)}
@@ -225,6 +241,29 @@ export default function CreateUser({
                           <Lock
                             sx={{ color: "#787878", opacity: 0.6, mr: 1 }}
                           />
+                        ) : null,
+                      endAdornment:
+                        field === "password" ? (
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={handleClickShowPassword}
+                              edge="end"
+                              size="small"
+                              sx={{
+                                color: "#6c757d",
+                                "&:hover": {
+                                  color: theme.palette.primary.main,
+                                },
+                              }}
+                            >
+                              {showPassword ? (
+                                <VisibilityOff />
+                              ) : (
+                                <Visibility />
+                              )}
+                            </IconButton>
+                          </InputAdornment>
                         ) : null,
                     }}
                   />

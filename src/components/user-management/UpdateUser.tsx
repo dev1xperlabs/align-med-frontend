@@ -139,8 +139,13 @@ export default function UpdateUser({
       toast.success("User updated successfully.");
       refetchUserList();
     },
-    onError: (error) => {
-      toast.error(`Failed to update user`);
+    onError: (error: any) => {
+      const message =
+        error?.response?.data?.errorMessage ||
+        error?.response?.data?.resultMessage ||
+        "Failed to update user";
+
+      toast.error(message);
     },
   });
 

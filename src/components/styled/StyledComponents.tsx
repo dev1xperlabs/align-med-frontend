@@ -50,6 +50,8 @@ export const StyledDashboardCard = styled(Card)(({ theme }) => ({
   borderRadius: "12px",
   boxShadow: "3 5px 100px rgba(0,0,0,0.08)",
   border: "none",
+  overflow: "hidden",
+  maxWidth: "calc(100vw - 339px)",
   backgroundColor: theme.palette.background.paper,
 }));
 
@@ -686,16 +688,36 @@ export const StyledToggleContainer = styled(Box)(({ theme }) => ({
 export const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
   // borderRadius: theme.shape.borderRadius,
+  position: "relative",
   boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
-  overflow: "hidden",
+  overflowX: "auto",
+  maxWidth: "100vw",
+  scrollbarWidth: "thin", // Firefox
+  scrollbarColor: "#ccc transparent",
+
+  "&::-webkit-scrollbar": {
+    display: "none",
+  },
+
+  "&::-webkit-scrollbar-thumb": {
+    backgroundColor: "#ccc",
+    borderRadius: "4px",
+  },
+  "&::-webkit-scrollbar-track": {
+    backgroundColor: "transparent",
+  },
 }));
 
 export const StyledTable = styled(Table)(({ theme }) => ({
-  minWidth: 650,
+  maxHeight: "calc(100vw - 100px)",
 }));
 
 export const StyledTableHead = styled(TableHead)(({ theme }) => ({
   backgroundColor: theme.palette.text.primary,
+  // position: "sticky", // ✅ Make it sticky
+  // top: 0, // ✅ Stick to top of container
+  // zIndex: 1,
+  whiteSpace: "nowrap",
   "& .MuiTableCell-head": {
     backgroundColor: theme.palette.text.primary,
     color: theme.palette.common.white,
@@ -710,19 +732,26 @@ export const StyledTableHead = styled(TableHead)(({ theme }) => ({
     },
     "&:first-of-type": {
       textAlign: "left",
+      position: "sticky", // Sticky positioning
+      left: 0, // Stick to the left
+      zIndex: 1,
     },
   },
 }));
 
 export const StyledTableBody = styled(TableBody)(({ theme }) => ({
   "& .MuiTableRow-root": {
+    "&:nth-of-type(odd)": {
+      backgroundColor: theme.palette.grey[100], // Light grey for odd rows
+    },
     "&:nth-of-type(even)": {
-      backgroundColor: theme.palette.background.paper,
+      backgroundColor: theme.palette.background.paper, // Keep white for even if you want
     },
     "&:hover": {
-      backgroundColor: theme.palette.grey[100],
+      backgroundColor: theme.palette.grey[200], // Slightly darker grey on hover
     },
   },
+
   "& .MuiTableCell-body": {
     fontSize: "14px",
     fontFamily: theme.typography.fontFamily,
@@ -730,12 +759,19 @@ export const StyledTableBody = styled(TableBody)(({ theme }) => ({
     padding: theme.spacing(1.5, 2),
     borderBottom: `1px solid ${theme.palette.grey[200]}`,
     textAlign: "center",
+    whiteSpace: "nowrap",
     verticalAlign: "middle",
+
     "&:not(:first-of-type)": {
       textAlign: "center",
     },
+
     "&:first-of-type": {
       textAlign: "left",
+      position: "sticky",
+      left: 0,
+      zIndex: 1,
+      backgroundColor: "inherit",
     },
   },
 }));

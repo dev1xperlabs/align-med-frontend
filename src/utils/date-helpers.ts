@@ -46,9 +46,27 @@ export const getDateRange = (period: string) => {
 export const formatDateISO = (date: Date) => date.toISOString().split("T")[0]
 
 export const formatDatePretty = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-    })
+  return new Date(dateString).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  })
 }
+
+
+
+
+export const getGroupByFromDateRange = (dateRange: string): string => {
+  switch (dateRange) {
+    case "Today":
+      return "today";
+    case "This Week":
+      return "week";
+    case "This Month":
+      return "month";
+    case "This Year":
+      return "year";
+    default:
+      return "month";
+  }
+};

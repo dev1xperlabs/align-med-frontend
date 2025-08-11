@@ -15,10 +15,6 @@ import {
   People as PeopleIcon,
   ExpandLess,
   ExpandMore,
-  CurrencyExchange,
-  Calculate,
-  AddBoxOutlined,
-  AccountBalance,
 } from "@mui/icons-material";
 import {
   ResponsiveDrawer,
@@ -28,7 +24,7 @@ import {
 } from "../styled";
 import { AlignLogo } from "../common/LogoComponent";
 import { navigationData } from "@/constants/navigationData";
-
+import { useAuth } from "../auth/useAuth";
 export function AppSidebar({
   open,
   onToggle,
@@ -48,6 +44,10 @@ export function AppSidebar({
       );
     }
   };
+
+  const { user } = useAuth();
+
+  console.log("Sidebar - user role:", user);
 
   const isActiveItem = (item: iNavigationItem) => {
     if (pathname === "/" || pathname === "/patient-intake") {
@@ -223,14 +223,21 @@ export function AppSidebar({
       </Box>
 
       <List sx={{ pt: 2, px: open ? 1 : 0.5 }}>
-        {navigationData.map((item) => (
-          <React.Fragment key={item.title}>
-            <ListItem disablePadding sx={{ mb: 0.5 }}>
-              {renderMainItem(item)}
-            </ListItem>
-            {renderSubItems(item)}
-          </React.Fragment>
-        ))}
+        {navigationData
+          .filter((item) => {
+            if (item.title === "User Management") {
+              return user?.role_id === 1;
+            }
+            return true;
+          })
+          .map((item) => (
+            <React.Fragment key={item.title}>
+              <ListItem disablePadding sx={{ mb: 0.5 }}>
+                {renderMainItem(item)}
+              </ListItem>
+              {renderSubItems(item)}
+            </React.Fragment>
+          ))}
       </List>
     </ResponsiveDrawer>
   );

@@ -125,22 +125,20 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
         });
       });
 
-      const sortedDates = Array.from(allDates).sort(
-        (a, b) => new Date(a).getTime() - new Date(b).getTime()
-      );
+      const isWeekLabel = (label: string) => /^Week\s\d+$/i.test(label);
 
-      // Format dates for display
-      const labels = sortedDates.map((date) => {
-        try {
-          return new Date(date).toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-          });
-        } catch {
-          return date;
+      const sortedDates = Array.from(allDates).sort((a, b) => {
+        if (isWeekLabel(a) && isWeekLabel(b)) {
+          const aNum = parseInt(a.replace("Week ", ""));
+          const bNum = parseInt(b.replace("Week ", ""));
+          return aNum - bNum;
         }
+        // Default fallback for non-week labels (use string sort)
+        return a.localeCompare(b);
       });
+
+      const labels = sortedDates.map((label) => label);
+      // Format dates for display
 
       // Create datasets - one for each attorney
       const datasets = data.map((attorney, index) => {
@@ -173,7 +171,6 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
         };
       });
 
-      console.log("Attorney chart data:", { labels, datasets });
       return { labels, datasets };
     } else {
       // Original logic for location data and settlements by month/week/year
@@ -242,7 +239,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
         };
       });
 
-      console.log("Period chart data prepared:", { labels, datasets });
+      console.log(labels, "Chart labels");
       return { labels, datasets };
     }
   }, [
@@ -294,14 +291,12 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
             const label = context.dataset.label || "";
             const value = context.parsed.y;
 
-            // Handle different data types based on page and data type
             if (pageType === "patient-intake") {
               if (dataType === "count") {
                 return `${label}: ${value} ${
                   value === 1 ? "Patient" : "Patients"
                 }`;
               } else {
-                // For sum data, format as currency
                 return `${label}: ${value.toLocaleString("en-US", {
                   style: "currency",
                   currency: "USD",

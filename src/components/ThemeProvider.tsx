@@ -1,11 +1,11 @@
 // src\components\ThemeProvider.tsx
-"use client"
+"use client";
 
-import type React from "react"
-import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter"
-import { ThemeProvider } from "@mui/material/styles"
-import CssBaseline from "@mui/material/CssBaseline"
-import { createTheme } from "@mui/material/styles"
+import type React from "react";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
   palette: {
@@ -22,8 +22,8 @@ const theme = createTheme({
       contrastText: "#ffffff",
     },
     background: {
-      default: "#f1f1f1", 
-      paper: "#ffffff", 
+      default: "#f1f1f1",
+      paper: "#ffffff",
     },
     text: {
       primary: "#545454",
@@ -245,12 +245,12 @@ const theme = createTheme({
       },
     },
   },
-})
+});
 
 export default function MUIThemeProvider({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <AppRouterCacheProvider options={{ enableCssLayer: true }}>
@@ -259,5 +259,5 @@ export default function MUIThemeProvider({
         {children}
       </ThemeProvider>
     </AppRouterCacheProvider>
-  )
+  );
 }

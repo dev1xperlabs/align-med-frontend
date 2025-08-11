@@ -5,6 +5,8 @@ export interface iUser {
   email: string;
   created_at: string;
   updated_at: string;
+  role_id: number | null; // Assuming role_id is a number, adjust if it's a string
+  role: string;
   // Add computed property for display name
   name?: string;
 }

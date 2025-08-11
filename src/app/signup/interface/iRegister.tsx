@@ -4,5 +4,5 @@ export interface iRegisterBody {
   email: string;
   password: string;
   phoneNumber: string;
-  status: boolean;
+  status?: boolean;
 }

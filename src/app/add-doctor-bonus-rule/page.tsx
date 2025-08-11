@@ -47,6 +47,8 @@ import {
 } from "@/model/doctor-bonus-rule/doctor-bonus-rule";
 import { iDoctor } from "@/model/doctor/doctor";
 import { iAttorney } from "@/model/attorneys/attorneys";
+import { red } from "@mui/material/colors";
+import PercentIcon from "@mui/icons-material/Percent";
 
 interface FormErrors {
   doctorName?: string;
@@ -505,10 +507,10 @@ export default function AddDoctorBonusRulePage() {
                           borderWidth: "1px",
                         },
                         "&:hover .MuiOutlinedInput-notchedOutline": {
-                          borderColor: "#8BC34A",
+                          borderColor: theme.palette.primary.main,
                         },
                         "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                          borderColor: "#8BC34A",
+                          borderColor: theme.palette.primary.main,
                           borderWidth: "2px",
                         },
                         "& .MuiSelect-select": {
@@ -553,7 +555,7 @@ export default function AddDoctorBonusRulePage() {
                         sx={{
                           fontSize: "14px",
                           fontWeight: 500,
-                          color: "#8BC34A",
+                          color: theme.palette.primary.main,
                           borderBottom: "1px solid #f0f0f0",
                         }}
                       >
@@ -572,7 +574,7 @@ export default function AddDoctorBonusRulePage() {
               <StyledPrimaryButton
                 onClick={() => handleOpenDialog()}
                 sx={{
-                  backgroundColor: "#8BC34A",
+                  backgroundColor: theme.palette.primary.main,
                   "&:hover": { backgroundColor: "#7CB342" },
                 }}
               >
@@ -603,7 +605,7 @@ export default function AddDoctorBonusRulePage() {
                     <TableCell>Rule Name</TableCell>
                     <TableCell>Doctor Name</TableCell>
                     <TableCell>Bonus Percentage</TableCell>
-                    <TableCell>Action</TableCell>
+                    <TableCell>Actions</TableCell>
                   </TableRow>
                 </StyledTableHead>
                 <StyledTableBody>
@@ -627,7 +629,13 @@ export default function AddDoctorBonusRulePage() {
                         </TableCell>
                         <TableCell>{rule.bonus_percentage}%</TableCell>
                         <TableCell>
-                          <Box sx={{ display: "flex", gap: 1 }}>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              gap: 1,
+                              justifyContent: "center",
+                            }}
+                          >
                             <IconButton
                               size="small"
                               onClick={() => handleOpenDialog(rule)}
@@ -745,7 +753,10 @@ export default function AddDoctorBonusRulePage() {
                       fontSize: "14px",
                     }}
                   >
-                    Percentage
+                    Percentage{" "}
+                    <Box component="span" sx={{ color: red[500] }}>
+                      *
+                    </Box>
                   </Typography>
                   <TextField
                     fullWidth
@@ -755,7 +766,28 @@ export default function AddDoctorBonusRulePage() {
                     size="medium"
                     type="number"
                     error={!!formErrors.percentage}
-                    inputProps={{ min: 0, max: 100, step: 0.01 }}
+                    InputProps={{
+                      endAdornment: (
+                        <PercentIcon sx={{ color: "#787878", opacity: 0.6 }} />
+                      ),
+                      inputProps: {
+                        style: {
+                          MozAppearance: "textfield",
+                        },
+                        inputMode: "decimal",
+                      },
+                      sx: {
+                        "& input[type=number]": {
+                          MozAppearance: "textfield",
+                        },
+
+                        "& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button":
+                          {
+                            WebkitAppearance: "none",
+                            margin: 0,
+                          },
+                      },
+                    }}
                   />
                   {formErrors.percentage && (
                     <FormHelperText error sx={{ mt: 0.5, ml: 0 }}>
@@ -774,7 +806,10 @@ export default function AddDoctorBonusRulePage() {
                       fontSize: "14px",
                     }}
                   >
-                    Rule Name
+                    Rule Name{" "}
+                    <Box component="span" sx={{ color: red[500] }}>
+                      *
+                    </Box>
                   </Typography>
                   <TextField
                     fullWidth

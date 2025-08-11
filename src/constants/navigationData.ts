@@ -3,6 +3,7 @@ import AccountBalance from "@mui/icons-material/AccountBalance";
 import CurrencyExchange from "@mui/icons-material/CurrencyExchange";
 import AddBoxOutlined from "@mui/icons-material/AddBoxOutlined";
 import Calculate from "@mui/icons-material/Calculate";
+import User from "@mui/icons-material/Person";
 
 export const navigationData: iNavigationItem[] = [
     {
@@ -31,5 +32,10 @@ export const navigationData: iNavigationItem[] = [
                 icon: Calculate,
             },
         ],
+    },
+    {
+        title: "User Management",
+        icon: User,
+        url: "/user-management",
     },
 ];

@@ -25,7 +25,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   }, [sidebarOpen]);
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", overflow: "hidden" }}>
       <DashboardNavbar
         onMenuClick={handleSidebarToggle}
         sidebarOpen={sidebarOpen}

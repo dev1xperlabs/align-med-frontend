@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { DashboardLayout } from "@/components/dahboard/Dashboard-layout";
 import {
   Box,
@@ -11,6 +11,7 @@ import {
   Typography,
   InputAdornment,
   CircularProgress,
+  useTheme,
 } from "@mui/material";
 import {
   StyledDashboardCard,
@@ -39,6 +40,7 @@ export default function CalculateBonusPage() {
     []
   );
 
+  const theme = useTheme();
   const {
     data: bonusRules = [],
     isLoading: isLoadingRules,
@@ -64,7 +66,7 @@ export default function CalculateBonusPage() {
           icon: "info",
           title: "No Records Found",
           text: "No bonus calculations found for the selected criteria.",
-          confirmButtonColor: "#8bc34a",
+          confirmButtonColor: theme.palette.primary.main,
         });
       } else {
         Swal.fire({
@@ -73,7 +75,7 @@ export default function CalculateBonusPage() {
           text: `Found ${data.length} bonus calculation${
             data.length > 1 ? "s" : ""
           }.`,
-          confirmButtonColor: "#8bc34a",
+          confirmButtonColor: theme.palette.primary.main,
           timer: 2000,
           timerProgressBar: true,
         });
@@ -98,7 +100,7 @@ export default function CalculateBonusPage() {
         icon: "warning",
         title: "Missing Information",
         text: "Please select dates and a rule before calculating bonus.",
-        confirmButtonColor: "#8bc34a",
+        confirmButtonColor: theme.palette.primary.main,
       });
       return;
     }
@@ -108,7 +110,7 @@ export default function CalculateBonusPage() {
         icon: "warning",
         title: "Invalid Date Range",
         text: "From date cannot be later than To date.",
-        confirmButtonColor: "#8bc34a",
+        confirmButtonColor: theme.palette.primary.main,
       });
       return;
     }
@@ -194,10 +196,10 @@ export default function CalculateBonusPage() {
                           borderColor: "#e0e0e0",
                         },
                         "&:hover fieldset": {
-                          borderColor: "#8BC34A",
+                          borderColor: theme.palette.primary.main,
                         },
                         "&.Mui-focused fieldset": {
-                          borderColor: "#8BC34A",
+                          borderColor: theme.palette.primary.main,
                         },
                         "& input[type='date']::-webkit-calendar-picker-indicator":
                           {
@@ -226,10 +228,10 @@ export default function CalculateBonusPage() {
                           borderColor: "#e0e0e0",
                         },
                         "&:hover fieldset": {
-                          borderColor: "#8BC34A",
+                          borderColor: theme.palette.primary.main,
                         },
                         "&.Mui-focused fieldset": {
-                          borderColor: "#8BC34A",
+                          borderColor: theme.palette.primary.main,
                         },
                         "& input[type='date']::-webkit-calendar-picker-indicator":
                           {
@@ -260,10 +262,10 @@ export default function CalculateBonusPage() {
                           borderColor: "#e0e0e0",
                         },
                         "&:hover fieldset": {
-                          borderColor: "#8BC34A",
+                          borderColor: theme.palette.primary.main,
                         },
                         "&.Mui-focused fieldset": {
-                          borderColor: "#8BC34A",
+                          borderColor: theme.palette.primary.main,
                         },
                       },
                     }}
@@ -305,7 +307,7 @@ export default function CalculateBonusPage() {
                   calculateBonusMutation.isPending
                 }
                 sx={{
-                  backgroundColor: "#8BC34A",
+                  backgroundColor: theme.palette.primary.main,
                   "&:hover": { backgroundColor: "#7CB342" },
                   "&:disabled": { backgroundColor: "#ccc" },
                   minWidth: "150px",

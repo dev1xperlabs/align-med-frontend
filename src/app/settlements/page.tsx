@@ -11,6 +11,7 @@ import GenericTable from "@/components/common/CustomTable";
 
 import { api } from "../../lib/api";
 import { transformSettlementsBillingCards } from "@/utils/metrics-helpers";
+import { getDateRange, getGroupByFromDateRange } from "@/utils/date-helpers";
 import { iAttorney } from "@/model/attorneys/attorneys";
 
 interface FilterConfig {
@@ -25,9 +26,7 @@ interface FilterConfig {
 export default function SettlementsPage() {
   const [groupBy, setGroupBy] = useState<"month" | "attorneys">("month");
   const [viewType, setViewType] = useState<"table" | "graph">("table");
-  const [dateRange, setDateRange] = useState<"month" | "week" | "year">(
-    "month"
-  );
+  const [dateRange, setDateRange] = useState<string>("This Year");
   const [selectedAttorneys, setSelectedAttorneys] = useState<string[]>([]);
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
@@ -56,11 +55,21 @@ export default function SettlementsPage() {
   );
 
   const requestBody = useMemo(() => {
+    const dateRangeData = getDateRange(dateRange);
+
     const baseBody = {
-      group_by: dateRange,
       page_number: page,
       page_size: pageSize,
+      start_date: dateRangeData.start_date,
+      end_date: dateRangeData.end_date,
     };
+
+    if (groupBy === "month") {
+      return {
+        ...baseBody,
+        group_by: getGroupByFromDateRange(dateRange),
+      };
+    }
 
     if (groupBy === "attorneys") {
       const attorney_ids = selectedAttorneys
@@ -160,14 +169,13 @@ export default function SettlementsPage() {
   };
 
   const groupByOptions = [
-    { value: "month", label: "By Month" },
+    { value: "month", label: "By Date" },
     { value: "attorneys", label: "By Attorneys" },
   ];
 
   const filters: FilterConfig[] = useMemo(() => {
     const baseFilters: FilterConfig[] = [];
 
-    // Add attorneys filter first if groupBy is attorneys
     if (groupBy === "attorneys") {
       baseFilters.push({
         key: "attorney",
@@ -182,18 +190,13 @@ export default function SettlementsPage() {
       });
     }
 
-    // Add date range filter after attorneys
     baseFilters.push({
       key: "dateRange",
       label: "Date Range",
-      options: ["month", "week", "year"],
+      options: ["Today", "This Week", "This Month", "This Year"],
       value: dateRange,
       onChange: (val: string | string[]) => {
-        setDateRange(
-          Array.isArray(val)
-            ? (val[0] as "month" | "week" | "year")
-            : (val as "month" | "week" | "year")
-        );
+        setDateRange(Array.isArray(val) ? val[0] : val);
         setPage(1);
       },
       isMultiple: false,

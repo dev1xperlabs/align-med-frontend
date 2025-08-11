@@ -54,7 +54,6 @@ export default function CustomTable({
   }, [viewType]);
 
   const transformedData = useMemo(() => {
-    console.log(data, "transformedData");
     return data;
   }, [data]);
 
@@ -128,16 +127,6 @@ export default function CustomTable({
                   groupBy={groupBy}
                   dataType={dataType}
                 />
-
-                {transformedData.length > 0 && (
-                  <PaginationControls
-                    count={totalRecords}
-                    rowsPerPage={pageSize}
-                    page={currentPage}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                  />
-                )}
               </>
             )}
           </>
@@ -159,6 +148,16 @@ export default function CustomTable({
               />
             )}
           </Box>
+        )}
+
+        {transformedData.length > 0 && (
+          <PaginationControls
+            count={totalRecords}
+            rowsPerPage={pageSize}
+            page={currentPage}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
         )}
       </StyledDashboardCard>
     </>

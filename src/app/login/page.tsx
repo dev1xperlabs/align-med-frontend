@@ -43,7 +43,7 @@ const LoginPage = () => {
       console.log("Login API successful:", data);
       console.log("AccessToken:", data.accessToken);
       console.log("User:", data.user);
-
+      debugger;
       // Call the login function from useAuth with the correct field names
       login(data.accessToken, data.user);
     },

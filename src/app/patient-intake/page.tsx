@@ -32,6 +32,8 @@ export default function PatientIntakePage() {
   const [groupBy, setGroupBy] = useState("locations");
   const [metricType, setMetricType] = useState<"sum" | "count">("count");
   const [dateRange, setDateRange] = useState("This Year");
+  const [customStartDate, setCustomStartDate] = useState("");
+  const [customEndDate, setCustomEndDate] = useState("");
   const [selectedAttorneys, setSelectedAttorneys] = useState<string[]>([]);
   const [viewType, setViewType] = useState<"table" | "graph">("table");
   const [page, setPage] = useState(1);
@@ -63,7 +65,15 @@ export default function PatientIntakePage() {
       .map((name) => attorneyNameToIdMap.get(name))
       .filter(Boolean);
 
-    const dateRangeData = getDateRange(dateRange);
+    let dateRangeData;
+    if (dateRange === "Custom" && customStartDate && customEndDate) {
+      dateRangeData = {
+        start_date: customStartDate,
+        end_date: customEndDate,
+      };
+    } else {
+      dateRangeData = getDateRange(dateRange);
+    }
 
     return {
       page_number: page,
@@ -77,6 +87,8 @@ export default function PatientIntakePage() {
     page,
     pageSize,
     dateRange,
+    customStartDate,
+    customEndDate,
     groupBy,
     selectedAttorneys,
     attorneyNameToIdMap,
@@ -163,8 +175,27 @@ export default function PatientIntakePage() {
     setViewType(value);
   };
 
+  const handleStartDateChange = (date: string) => {
+    setCustomStartDate(date);
+    setPage(1);
+  };
+
+  const handleEndDateChange = (date: string) => {
+    setCustomEndDate(date);
+    setPage(1);
+  };
   const handleDateRangeChange = (value: string) => {
     setDateRange(value);
+
+    if (value === "Custom") {
+      setCustomStartDate("");
+      setCustomEndDate("");
+    }
+    if (value !== "Custom") {
+      const calculatedRange = getDateRange(value);
+      setCustomStartDate(calculatedRange.start_date);
+      setCustomEndDate(calculatedRange.end_date);
+    }
     setPage(1);
   };
 
@@ -181,6 +212,21 @@ export default function PatientIntakePage() {
     setPageSize(newSize);
     setPage(1);
   };
+
+  const displayDates = useMemo(() => {
+    if (dateRange === "Custom") {
+      return {
+        startDate: customStartDate,
+        endDate: customEndDate,
+      };
+    } else {
+      const calculatedRange = getDateRange(dateRange);
+      return {
+        startDate: calculatedRange.start_date,
+        endDate: calculatedRange.end_date,
+      };
+    }
+  }, [dateRange, customStartDate, customEndDate]);
 
   const isMetricsLoading = isLoadingPatientStats || isLoadingBillingStats;
   const isTableDataLoading = isLoadingTable || isLoadingAttorneys;
@@ -253,7 +299,13 @@ export default function PatientIntakePage() {
             {
               key: "dateRange",
               label: "Date Range",
-              options: ["Today", "This Week", "This Month", "This Year"],
+              options: [
+                "Today",
+                "This Week",
+                "This Month",
+                "This Year",
+                "Custom",
+              ],
               value: dateRange,
               onChange: (value: string | string[]) =>
                 handleDateRangeChange(Array.isArray(value) ? value[0] : value),
@@ -272,6 +324,12 @@ export default function PatientIntakePage() {
           onPageSizeChange={handlePageSizeChange}
           pageType="patient-intake"
           isLoading={isTableDataLoading}
+          dateRange={dateRange}
+          startDate={displayDates.startDate}
+          endDate={displayDates.endDate}
+          onDateRangeChange={handleDateRangeChange}
+          onStartDateChange={handleStartDateChange}
+          onEndDateChange={handleEndDateChange}
         />
       </Box>
     </DashboardLayout>

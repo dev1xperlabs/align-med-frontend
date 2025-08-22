@@ -14,6 +14,7 @@ import { tableStyles, chartStyles } from "@/styles";
 import FilterDropdown from "./filters/FiltersDropdown";
 import PaginationControls from "./pagination/PaginationControls";
 import { GenericTableProps } from "@/model/table/tableInterface";
+import DateRangeDropdowns from "./filters/DateRangeDropdowns";
 
 export default function CustomTable({
   data = [],
@@ -37,6 +38,12 @@ export default function CustomTable({
   hideDataTypeToggle = false,
   pageType = "patient-intake",
   isLoading = false,
+  dateRange,
+  startDate,
+  endDate,
+  onDateRangeChange,
+  onStartDateChange,
+  onEndDateChange,
 }: GenericTableProps) {
   const [currentViewType, setCurrentViewType] = useState<"table" | "graph">(
     viewType
@@ -88,6 +95,11 @@ export default function CustomTable({
     onPageSizeChange?.(newPageSize);
   };
 
+  console.log(groupBy, "settlemets by date ");
+  const dateRangeFilter = filters.find((filter) => filter.key === "dateRange");
+  const isCustomDateRange =
+    dateRangeFilter?.value === "Custom" || groupBy === "month";
+
   return (
     <>
       <SimpleToggles
@@ -110,6 +122,14 @@ export default function CustomTable({
                 <FilterDropdown filter={filter} />
               </Box>
             ))}
+            <DateRangeDropdowns
+              startDate={startDate}
+              endDate={endDate}
+              onStartDateChange={onStartDateChange}
+              onEndDateChange={onEndDateChange}
+              isEditable={isCustomDateRange}
+              groupBy={groupBy}
+            />
           </Box>
         </Box>
 

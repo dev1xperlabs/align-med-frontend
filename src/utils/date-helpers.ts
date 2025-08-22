@@ -71,7 +71,15 @@ export const formatDatePretty = (dateString: string) => {
 
 
 
-export const getDateRangeFromGroupBy = (period: string) => {
+export const getDateRangeFromGroupBy = (
+  period: string,
+  startDate?: string,
+  endDate?: string
+) => {
+  if (startDate && endDate) {
+    return { start_date: startDate, end_date: endDate };
+  }
+
   switch (period) {
     case "Date":
       return getDateRange("Today");
@@ -100,4 +108,13 @@ export const getApiGroupBy = (period: string): string => {
     default:
       return "week";
   }
+};
+
+
+
+
+export const addDays = (date: string, days: number) => {
+  const d = new Date(date);
+  d.setDate(d.getDate() + days);
+  return d.toISOString().split("T")[0];
 };

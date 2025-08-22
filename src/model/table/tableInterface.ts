@@ -22,6 +22,12 @@ export interface GenericTableProps {
     hideDataTypeToggle?: boolean;
     pageType?: "patient-intake" | "settlements";
     isLoading?: boolean;
+    dateRange?: string
+    startDate?: string
+    endDate?: string
+    onDateRangeChange?: (value: string) => void
+    onStartDateChange?: (date: string) => void
+    onEndDateChange?: (date: string) => void
 }
 
 

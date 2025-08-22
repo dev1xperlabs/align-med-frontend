@@ -38,6 +38,9 @@ export default function SettlementsPage() {
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
 
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
+
   const { data: metricsData, isLoading: isLoadingMetrics } = useQuery({
     queryKey: ["settlementsBillingCards"],
     queryFn: () => api.getSettlementsBillingCards(),
@@ -69,7 +72,16 @@ export default function SettlementsPage() {
     let dateRangeData;
 
     if (groupBy === "month") {
-      dateRangeData = getDateRangeFromGroupBy(groupByPeriod);
+      dateRangeData = getDateRangeFromGroupBy(
+        groupByPeriod,
+        startDate,
+        endDate
+      );
+    } else if (dateRange === "Custom" && startDate && endDate) {
+      dateRangeData = {
+        start_date: startDate,
+        end_date: endDate,
+      };
     } else {
       dateRangeData = getDateRange(dateRange);
     }
@@ -105,6 +117,8 @@ export default function SettlementsPage() {
     groupBy,
     selectedAttorneys,
     attorneyNameToIdMap,
+    startDate,
+    endDate,
   ]);
 
   const {
@@ -119,6 +133,8 @@ export default function SettlementsPage() {
       selectedAttorneys,
       page,
       pageSize,
+      startDate,
+      endDate,
     ],
     queryFn: () => {
       if (groupBy === "month") {
@@ -165,7 +181,8 @@ export default function SettlementsPage() {
 
       if (groupBy === "attorneys") {
         columns.sort(
-          (a, b) => parseInt(b.split(" ")[1]) - parseInt(a.split(" ")[1])
+          (a, b) =>
+            Number.parseInt(b.split(" ")[1]) - Number.parseInt(a.split(" ")[1])
         );
       }
       return { results, count, primaryKey, columns };
@@ -232,11 +249,17 @@ export default function SettlementsPage() {
       baseFilters.push({
         key: "dateRange",
         label: "Date Range",
-        options: ["Today", "This Week", "This Month", "This Year"],
+        options: ["Today", "This Week", "This Month", "This Year", "Custom"],
         value: dateRange,
         onChange: (val: string | string[]) => {
-          setDateRange(Array.isArray(val) ? val[0] : val);
+          const newDateRange = Array.isArray(val) ? val[0] : val;
+          setDateRange(newDateRange);
           setPage(1);
+
+          if (newDateRange !== "Custom") {
+            setStartDate("");
+            setEndDate("");
+          }
         },
         isMultiple: false,
       });
@@ -244,6 +267,40 @@ export default function SettlementsPage() {
 
     return baseFilters;
   }, [groupBy, groupByPeriod, dateRange, selectedAttorneys, attorneyOptions]);
+
+  const handleStartDateChange = useCallback((date: string) => {
+    setStartDate(date);
+    setPage(1);
+  }, []);
+
+  const handleEndDateChange = useCallback((date: string) => {
+    setEndDate(date);
+    setPage(1);
+  }, []);
+
+  const displayDates = useMemo(() => {
+    if (dateRange === "Custom") {
+      return { startDate, endDate };
+    }
+
+    if (groupBy === "month") {
+      const dateRangeData = getDateRangeFromGroupBy(
+        groupByPeriod,
+        startDate,
+        endDate
+      );
+      return {
+        startDate: dateRangeData.start_date,
+        endDate: dateRangeData.end_date,
+      };
+    } else {
+      const dateRangeData = getDateRange(dateRange);
+      return {
+        startDate: dateRangeData.start_date,
+        endDate: dateRangeData.end_date,
+      };
+    }
+  }, [dateRange, groupBy, groupByPeriod, startDate, endDate]);
 
   const handleGroupByChange = useCallback((value: string) => {
     setGroupBy(value as "month" | "attorneys");
@@ -345,6 +402,12 @@ export default function SettlementsPage() {
           onPageSizeChange={handlePageSizeChange}
           pageType="settlements"
           isLoading={isTableDataLoading}
+          dateRange={dateRange}
+          startDate={displayDates.startDate}
+          endDate={displayDates.endDate}
+          onDateRangeChange={setDateRange}
+          onStartDateChange={handleStartDateChange}
+          onEndDateChange={handleEndDateChange}
         />
       </Box>
     </DashboardLayout>

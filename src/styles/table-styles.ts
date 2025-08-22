@@ -33,22 +33,23 @@ export const tableStyles = {
 
   // Filter styles
   filterContainer: {
-    minWidth: 200,
+    minWidth: 100,
   } as SxProps<Theme>,
 
   filterFormControl: {
-    minWidth: 200,
+    minWidth: 100,
     width: "100%",
   } as SxProps<Theme>,
 
   filterSelect: {
-    width: {
-      xs: "100%",
-      sm: 200,
-      md: 300,
-      lg: 350,
-      xl: 400,
-    },
+    // width: {
+    //   xs: "100%",
+    //   sm: 200,
+    //   md: 200,
+    //   lg: 200,
+    //   xl: 400,
+    // },
+    width: 200,
     minHeight: 40,
     fontSize: 14,
     alignItems: "center",
@@ -59,13 +60,14 @@ export const tableStyles = {
 
   // Autocomplete styles
   autocomplete: {
-    width: {
-      xs: "100%",
-      sm: 200,
-      md: 300,
-      lg: 350,
-      xl: 400,
-    },
+    // width: {
+    //   xs: "100%",
+    //   sm: 200,
+    //   md: 200,
+    //   lg: 200,
+    //   xl: 400,
+    // },
+    width: 350,
     mb: 1,
     mt: "8px",
     "& .MuiInputBase-root": {

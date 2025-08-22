@@ -81,14 +81,20 @@ export function useAuth() {
     [router]
   );
 
-  const logout = useCallback(() => {
-    console.log("useAuth: Logout called");
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("user");
-    setUser(null);
-    setIsAuthenticated(false);
-    router.push("/login");
-  }, [router]);
+  const logout = useCallback(
+    (shouldRedirect: boolean = true) => {
+      console.log("useAuth: Logout called");
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("user");
+      setUser(null);
+      setIsAuthenticated(false);
+
+      if (shouldRedirect) {
+        router.push("/login");
+      }
+    },
+    [router]
+  );
 
   const getToken = () => {
     return localStorage.getItem("authToken");

@@ -11,13 +11,22 @@ import {
   Box,
   Divider,
   useTheme,
+  ListItemIcon,
+  ListItemText,
 } from "@mui/material";
-import { Menu as MenuIcon, Logout } from "@mui/icons-material";
+import {
+  Menu as MenuIcon,
+  Logout,
+  LockResetOutlined,
+  LockClockRounded,
+} from "@mui/icons-material";
 import { ResponsiveAppBar, StyledAvatar } from "../styled";
 import { MuiRouteDisplay } from "../common/route-display-mui";
 import { useAuth } from "../auth/useAuth";
 import Swal from "sweetalert2";
 import { useUserData } from "@/hooks/use-user-data";
+import ResetPassword from "../user-management/ResetPassword";
+import ResetPasswordModal from "../ResetPasswordModal";
 
 export function DashboardNavbar({
   onMenuClick,
@@ -27,8 +36,9 @@ export function DashboardNavbar({
 }: iDashboardNavbarProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { logout } = useAuth();
-
   const { user, isLoading } = useUserData();
+
+  const [resetPasswordOpen, setResetPasswordOpen] = useState(false);
 
   const handleAvatarClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -40,9 +50,18 @@ export function DashboardNavbar({
 
   const theme = useTheme();
 
-  // useEffect(() => {
-  //   console.log(user, "useUserData in DashboardNavbar");
-  // }, [user]);
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleChangePassword = () => {
+    setResetPasswordOpen(true);
+    handleMenuClose();
+  };
+
+  const handleResetPasswordClose = () => {
+    setResetPasswordOpen(false);
+  };
 
   const handleLogout = async () => {
     const result = await Swal.fire({
@@ -85,72 +104,92 @@ export function DashboardNavbar({
     return "User";
   };
 
+  console.log("User Data:", user);
+
   return (
-    <ResponsiveAppBar
-      position="fixed"
-      sidebarOpen={sidebarOpen}
-      sidebarWidth={sidebarWidth}
-      collapsedWidth={collapsedWidth}
-    >
-      <Toolbar sx={{ justifyContent: "space-between" }}>
-        <Box
-          sx={{
-            justifyContent: "start",
-            alignItems: "center",
-            display: "flex",
-          }}
-        >
-          <IconButton edge="start" onClick={onMenuClick} sx={{ mr: 2 }}>
-            <MenuIcon />
-          </IconButton>
-
-          <MuiRouteDisplay
-            variant="h6"
-            component="h1"
+    <>
+      <ResponsiveAppBar
+        position="fixed"
+        sidebarOpen={sidebarOpen}
+        sidebarWidth={sidebarWidth}
+        collapsedWidth={collapsedWidth}
+      >
+        <Toolbar sx={{ justifyContent: "space-between" }}>
+          <Box
             sx={{
-              fontWeight: 600,
-              color: "grey.800",
-              fontSize: "1.25rem",
+              justifyContent: "start",
+              alignItems: "center",
+              display: "flex",
             }}
-          />
-        </Box>
-
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton onClick={handleAvatarClick} sx={{ p: 0 }}>
-            <StyledAvatar>
-              {getInitials(user?.first_name, user?.last_name)}
-            </StyledAvatar>
-          </IconButton>
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            sx={{ mt: 1 }}
           >
-            <Box sx={{ px: 2, py: 1, minWidth: 200 }}>
-              <Typography variant="subtitle2" sx={{ fontWeight: "bold" }}>
-                {getDisplayName()}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {user?.email || "No email available"}
-              </Typography>
-            </Box>
-            <Divider />
-            <MenuItem onClick={handleLogout} sx={{ color: "#d32f2f" }}>
-              <Logout sx={{ mr: 1, fontSize: 20 }} />
-              Log out
-            </MenuItem>
-          </Menu>
-        </Box>
-      </Toolbar>
-    </ResponsiveAppBar>
+            <IconButton edge="start" onClick={onMenuClick} sx={{ mr: 2 }}>
+              <MenuIcon />
+            </IconButton>
+
+            <MuiRouteDisplay
+              variant="h6"
+              component="h1"
+              sx={{
+                fontWeight: 600,
+                color: "grey.800",
+                fontSize: "1.25rem",
+              }}
+            />
+          </Box>
+
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <IconButton onClick={handleAvatarClick} sx={{ p: 0 }}>
+              <StyledAvatar>
+                {getInitials(user?.first_name, user?.last_name)}
+              </StyledAvatar>
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              sx={{ mt: 1 }}
+            >
+              <Box sx={{ px: 2, py: 1, minWidth: 200 }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: "bold" }}>
+                  {getDisplayName()}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {user?.email || "No email available"}
+                </Typography>
+              </Box>
+              <Divider />
+              <MenuItem onClick={handleChangePassword}>
+                <ListItemIcon>
+                  <LockClockRounded sx={{ mr: 1, fontSize: 20 }} />
+                </ListItemIcon>
+                <ListItemText>Change Password</ListItemText>
+              </MenuItem>
+
+              <MenuItem onClick={handleLogout} sx={{ color: "#d32f2f" }}>
+                <Logout sx={{ mr: 1, fontSize: 20 }} />
+                Log out
+              </MenuItem>
+            </Menu>
+          </Box>
+        </Toolbar>
+      </ResponsiveAppBar>
+
+      {user?.email && (
+        <ResetPasswordModal
+          open={resetPasswordOpen}
+          isLoggedIn={true}
+          currentUserEmail={user.email}
+          onClose={handleResetPasswordClose}
+        />
+      )}
+    </>
   );
 }

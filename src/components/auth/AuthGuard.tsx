@@ -14,11 +14,16 @@ export function AuthGuard({ children }: AuthGuardProps) {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Public routes that don't require authentication
-  const publicRoutes = ["/login", "/signup"];
+  const publicRoutes = ["/login", "/signup", "/reset-password"];
   const isPublicRoute = publicRoutes.includes(pathname);
+  const skipAuthGuard = pathname === "/reset-password";
 
   useEffect(() => {
+    if (skipAuthGuard) {
+      setIsLoading(false);
+      return;
+    }
+
     const checkAuth = () => {
       console.log("AuthGuard: Checking authentication...");
       const token = localStorage.getItem("authToken");
@@ -31,6 +36,8 @@ export function AuthGuard({ children }: AuthGuardProps) {
 
       const authenticated = !!(token && user);
       setIsAuthenticated(authenticated);
+
+      console.log(authenticated, isPublicRoute, "tu hy ");
 
       if (authenticated && isPublicRoute) {
         console.log(

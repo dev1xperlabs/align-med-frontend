@@ -177,7 +177,7 @@ export function AppSidebar({
                           color: isActive
                             ? theme.palette.primary.main
                             : theme.palette.text.secondary,
-                          fontSize: "20px",
+                          fontSize: "17px",
                         }}
                       />
                     </ListItemIcon>
@@ -185,7 +185,7 @@ export function AppSidebar({
                   <ListItemText
                     primary={subItem.title}
                     primaryTypographyProps={{
-                      fontSize: "1rem",
+                      fontSize: "14px",
                       color: isActive
                         ? theme.palette.primary.main
                         : theme.palette.text.secondary,

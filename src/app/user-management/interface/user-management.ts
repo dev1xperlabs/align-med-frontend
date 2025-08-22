@@ -17,7 +17,7 @@ export type UserList = {
   totalRecords: number;
 };
 
-export interface UserListDto extends BaseListRequestDto<UserListItemDto> {}
+export interface UserListDto extends BaseListRequestDto<UserListItemDto> { }
 
 export interface UserListItemDto {
   id: number;
@@ -64,6 +64,9 @@ export interface ResetPasswordDto {
   user_id: number;
   password: string;
 }
+
+
+
 
 export interface Role {
   id: number;

@@ -51,8 +51,9 @@ export const StyledDashboardCard = styled(Card)(({ theme }) => ({
   boxShadow: "3 5px 100px rgba(0,0,0,0.08)",
   border: "none",
   overflow: "hidden",
-  maxWidth: "calc(100vw - 339px)",
+  maxWidth: "calc(100vw - var(--sidebar-width))",
   backgroundColor: theme.palette.background.paper,
+  transition: "max-width 0.3s ease",
 }));
 
 // =============================================================================

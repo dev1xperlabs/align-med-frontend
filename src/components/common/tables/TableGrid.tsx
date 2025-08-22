@@ -45,7 +45,7 @@ export default function TableGrid({
             key={column}
             sx={{ fontWeight: row[column] == "-" ? 900 : "normal" }}
           >
-            {row[column]}
+            {formatCellValue(row[column])}
           </TableCell>
         ))}
       </TableRow>

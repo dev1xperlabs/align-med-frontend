@@ -11,8 +11,12 @@ import GenericTable from "@/components/common/CustomTable";
 
 import { api } from "../../lib/api";
 import { transformSettlementsBillingCards } from "@/utils/metrics-helpers";
-import { getDateRange, getGroupByFromDateRange } from "@/utils/date-helpers";
-import { iAttorney } from "@/model/attorneys/attorneys";
+import {
+  getApiGroupBy,
+  getDateRange,
+  getDateRangeFromGroupBy,
+} from "@/utils/date-helpers";
+import type { iAttorney } from "@/model/attorneys/attorneys";
 
 interface FilterConfig {
   key: string;
@@ -26,6 +30,9 @@ interface FilterConfig {
 export default function SettlementsPage() {
   const [groupBy, setGroupBy] = useState<"month" | "attorneys">("month");
   const [viewType, setViewType] = useState<"table" | "graph">("table");
+
+  const [groupByPeriod, setGroupByPeriod] = useState<string>("Week");
+
   const [dateRange, setDateRange] = useState<string>("This Year");
   const [selectedAttorneys, setSelectedAttorneys] = useState<string[]>([]);
   const [page, setPage] = useState<number>(1);
@@ -59,7 +66,13 @@ export default function SettlementsPage() {
   );
 
   const requestBody = useMemo(() => {
-    const dateRangeData = getDateRange(dateRange);
+    let dateRangeData;
+
+    if (groupBy === "month") {
+      dateRangeData = getDateRangeFromGroupBy(groupByPeriod);
+    } else {
+      dateRangeData = getDateRange(dateRange);
+    }
 
     const baseBody = {
       page_number: page,
@@ -71,7 +84,7 @@ export default function SettlementsPage() {
     if (groupBy === "month") {
       return {
         ...baseBody,
-        group_by: getGroupByFromDateRange(dateRange),
+        group_by: getApiGroupBy(groupByPeriod),
       };
     }
 
@@ -87,6 +100,7 @@ export default function SettlementsPage() {
   }, [
     page,
     pageSize,
+    groupByPeriod,
     dateRange,
     groupBy,
     selectedAttorneys,
@@ -101,7 +115,7 @@ export default function SettlementsPage() {
     queryKey: [
       "settlements",
       groupBy,
-      dateRange,
+      groupBy === "month" ? groupByPeriod : dateRange,
       selectedAttorneys,
       page,
       pageSize,
@@ -149,6 +163,11 @@ export default function SettlementsPage() {
         }
       }
 
+      if (groupBy === "attorneys") {
+        columns.sort(
+          (a, b) => parseInt(b.split(" ")[1]) - parseInt(a.split(" ")[1])
+        );
+      }
       return { results, count, primaryKey, columns };
     },
     enabled: !isLoadingAttorneys,
@@ -173,7 +192,10 @@ export default function SettlementsPage() {
   };
 
   const groupByOptions = [
-    { value: "month", label: "By Date" },
+    {
+      value: "month",
+      label: groupBy === "month" ? `By ${groupByPeriod}` : "By Date",
+    },
     { value: "attorneys", label: "By Attorneys" },
   ];
 
@@ -194,20 +216,34 @@ export default function SettlementsPage() {
       });
     }
 
-    baseFilters.push({
-      key: "dateRange",
-      label: "Date Range",
-      options: ["Today", "This Week", "This Month", "This Year"],
-      value: dateRange,
-      onChange: (val: string | string[]) => {
-        setDateRange(Array.isArray(val) ? val[0] : val);
-        setPage(1);
-      },
-      isMultiple: false,
-    });
+    if (groupBy === "month") {
+      baseFilters.push({
+        key: "groupByPeriod",
+        label: "Group By",
+        options: ["Year", "Month", "Week", "Date"],
+        value: groupByPeriod,
+        onChange: (val: string | string[]) => {
+          setGroupByPeriod(Array.isArray(val) ? val[0] : val);
+          setPage(1);
+        },
+        isMultiple: false,
+      });
+    } else {
+      baseFilters.push({
+        key: "dateRange",
+        label: "Date Range",
+        options: ["Today", "This Week", "This Month", "This Year"],
+        value: dateRange,
+        onChange: (val: string | string[]) => {
+          setDateRange(Array.isArray(val) ? val[0] : val);
+          setPage(1);
+        },
+        isMultiple: false,
+      });
+    }
 
     return baseFilters;
-  }, [groupBy, dateRange, selectedAttorneys, attorneyOptions]);
+  }, [groupBy, groupByPeriod, dateRange, selectedAttorneys, attorneyOptions]);
 
   const handleGroupByChange = useCallback((value: string) => {
     setGroupBy(value as "month" | "attorneys");

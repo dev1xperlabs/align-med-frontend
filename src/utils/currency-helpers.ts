@@ -28,34 +28,34 @@ export const formatCurrency = (amount: string | number) => {
 
 //     return `${num.toFixed(0)}`;
 // };
-
 export const formatCurrencyCompact = (value: string | number) => {
     const num = typeof value === "string" ? Number.parseFloat(value) : value;
-    const absNum = Math.abs(num);
-
-    if (absNum >= 1_000_000_000_000) {
-        return `${Math.round(num / 1_000_000_000_000)}T`;
-    } else if (absNum >= 1_000_000_000) {
-        return `${Math.round(num / 1_000_000_000)}B`;
-    } else if (absNum >= 1_000_000) {
-        return `${Math.round(num / 1_000_000)}M`;
-    } else if (absNum >= 1_000) {
-        return `${Math.round(num / 1_000)}K`;
-    }
-
-    return `${Math.round(num)}`;
+    return new Intl.NumberFormat("en", {
+        notation: "compact",
+        maximumFractionDigits: 2
+    }).format(num);
 };
 
+export const formatCellValue = (value: any) => {
+    // Check if the value is a string and starts with a dollar sign
+    if (typeof value === "string" && value.startsWith("$")) {
+        // Remove the '$'
+        const numericString = value.substring(1);
 
-export const formatCellValue = (column: string, value: number) => {
-    if (column.includes("Charges") || column.includes("Amount") || column.includes("revenue")) {
-        return `$${value.toLocaleString(undefined, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-        })}`
+        // Convert to a number
+        const numberValue = parseFloat(numericString);
+
+        // Check if the conversion was successful
+        if (!isNaN(numberValue)) {
+            // Format the number with commas and two decimal places
+            return (
+                "$ " +
+                numberValue.toLocaleString("en-US", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                })
+            );
+        }
     }
-    if (column.includes("Percentage")) {
-        return `${value}%`
-    }
-    return value.toLocaleString()
+    return value
 }

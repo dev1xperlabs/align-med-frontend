@@ -125,12 +125,15 @@ export default function CreateUser({
     mutationFn: (data: CreateUserDto) => api.createUser(data),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
+      emptyFeilds();
       onClose();
       toast.success(data?.resultMessage || "User created successfully.");
       refetchUserList();
     },
-    onError: (error) => {
-      toast.error("Failed to create user!");
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.errorMessage, {
+        toastId: 1,
+      });
     },
   });
 

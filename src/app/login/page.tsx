@@ -24,8 +24,10 @@ import { useAuth } from "@/components/auth/useAuth";
 import Swal from "sweetalert2";
 
 import type { ApiError } from "next/dist/server/api-utils";
-import { iLoginBody } from "./interfaces/iUserInterface";
-import { AuthResponse } from "@/model/auth/auth";
+import type { iLoginBody } from "./interfaces/iUserInterface";
+import type { AuthResponse } from "@/model/auth/auth";
+import ResetPasswordModal from "@/components/ResetPasswordModal";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -33,6 +35,9 @@ const LoginPage = () => {
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [resetPasswordOpen, setResetPasswordOpen] = useState(false);
+  const [emailSubmitted, setEmailSubmitted] = useState(false);
+  const [originalEmail, setOriginalEmail] = useState("");
   const { login } = useAuth();
 
   const theme = useTheme();
@@ -40,12 +45,9 @@ const LoginPage = () => {
   const loginMutation = useMutation<AuthResponse, ApiError, iLoginBody>({
     mutationFn: (loginData: iLoginBody) => api.authLogin(loginData),
     onSuccess: (data) => {
-      console.log("Login API successful:", data);
-      console.log("AccessToken:", data.accessToken);
-      console.log("User:", data.user);
-      debugger;
       // Call the login function from useAuth with the correct field names
       login(data.accessToken, data.user);
+      setOriginalEmail(data.user.email);
     },
     onError: (error) => {
       console.error("Login failed:", error);
@@ -69,19 +71,27 @@ const LoginPage = () => {
   const handleSubmit = (event: { preventDefault: () => void }) => {
     event.preventDefault();
     if (!formData.email || !formData.password) {
-      Swal.fire({
-        icon: "warning",
-        title: "Missing Fields",
-        text: "Please enter both email and password.",
-        confirmButtonColor: theme.palette.primary.main,
+      toast.warn("Please enter both email and password.", {
+        toastId: "empty-fields-warning",
       });
       return;
     }
+
+    setOriginalEmail(formData.email);
+    setEmailSubmitted(true);
     loginMutation.mutate(formData);
   };
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
+  };
+
+  const handleResetPasswordOpen = () => {
+    setResetPasswordOpen(true);
+  };
+
+  const handleResetPasswordClose = () => {
+    setResetPasswordOpen(false);
   };
 
   return (
@@ -176,7 +186,7 @@ const LoginPage = () => {
                   {loginMutation.isPending ? "Logging in..." : "Login"}
                 </StyledLoginButton>
 
-                <Box sx={{ textAlign: "center", mt: 3 }}>
+                {/* <Box sx={{ textAlign: "center", mt: 3 }}>
                   <Typography
                     variant="body2"
                     sx={{ color: "#6c757d", fontSize: "14px" }}
@@ -197,12 +207,47 @@ const LoginPage = () => {
                       Sign up here
                     </Box>
                   </Typography>
+                </Box> */}
+
+                <Box sx={{ textAlign: "center", mt: 2 }}>
+                  <Typography
+                    variant="body2"
+                    sx={{ color: "#6c757d", fontSize: "14px" }}
+                  >
+                    Forgot your password?{" "}
+                    <Box
+                      component="button"
+                      type="button"
+                      onClick={handleResetPasswordOpen}
+                      sx={{
+                        color: theme.palette.primary.main,
+                        textDecoration: "none",
+                        fontWeight: 500,
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        fontSize: "14px",
+                        "&:hover": {
+                          textDecoration: "underline",
+                        },
+                      }}
+                    >
+                      Reset Password
+                    </Box>
+                  </Typography>
                 </Box>
               </Box>
             </CardContent>
           </StyledLoginCard>
         </Box>
       </Container>
+
+      {/* Reset Password Modal */}
+      <ResetPasswordModal
+        open={resetPasswordOpen}
+        isLoggedIn={false}
+        onClose={handleResetPasswordClose}
+      />
     </StyledLoginBackground>
   );
 };

@@ -18,6 +18,8 @@ import {
 import { iDoctor } from "@/model/doctor/doctor";
 import axios, { type AxiosInstance } from "axios";
 import { BaseResponseDto } from "../model/BaseResponseDto";
+import { ForgotPasswordDto, ValidateToken } from "@/app/reset-password/interfaces/interfaces";
+import { ResetPasswordRequest } from "@/model/request-reset-password/interface";
 
 const createBackendServer = (baseURL: string) => {
   const api: AxiosInstance = axios.create({
@@ -77,6 +79,15 @@ const createBackendServer = (baseURL: string) => {
     const response = await api.post("/auth/register", body);
     return response.data;
   };
+
+
+  const requestPasswordReset = async (resetPasswordRequest: ResetPasswordRequest): Promise<any> => {
+    const response = await api.post("/auth/request-password-reset", resetPasswordRequest)
+    return response.data
+  }
+
+
+
   // Patient APIs
   // Using POST body for patient count and sum summaries
   const getCountOfNewPatientsByLocation = async (body?: any): Promise<any> => {
@@ -149,23 +160,23 @@ const createBackendServer = (baseURL: string) => {
 
   // Doctors & Attorneys
   const getDoctors = async (): Promise<iDoctor[]> => {
-    const response = await api.get("api/v1/doctors");
+    const response = await api.get("api/v1/doctors/get-all-doctors");
     return response.data;
   };
 
   const getAttorneys = async (): Promise<iAttorney[]> => {
-    const response = await api.get("api/v1/attornies");
+    const response = await api.get("api/v1/attornies/get-all-attorneys");
     return response.data;
   };
 
   // Rules
   const getRules = async (): Promise<DoctorBonusRule[]> => {
-    const response = await api.get("api/v1/rules");
+    const response = await api.get("api/v1/rules/get-all-rules");
     return response.data;
   };
 
   const createRule = async (data: CreateDoctorBonusRule): Promise<any> => {
-    const response = await api.post("api/v1/rules", data);
+    const response = await api.post("api/v1/rules/create-rule", data);
     return response.data;
   };
 
@@ -173,12 +184,12 @@ const createBackendServer = (baseURL: string) => {
     id: string,
     data: UpdateDoctorBonusRule
   ): Promise<any> => {
-    const response = await api.put(`api/v1/rules/${id}`, data);
+    const response = await api.put(`api/v1/rules/update-rule/${id}`, data);
     return response.data;
   };
 
   const deleteRule = async (id: string): Promise<any> => {
-    const response = await api.delete(`api/v1/rules/${id}`);
+    const response = await api.delete(`api/v1/rules/delete-rule/${id}`);
     return response.data;
   };
 
@@ -232,6 +243,36 @@ const createBackendServer = (baseURL: string) => {
     return response.data;
   };
 
+
+  const forgotPassword = async (
+    forgotPasswordDto: ForgotPasswordDto
+  ): Promise<any> => {
+    const response = await api.put(
+      `auth/reset-password`,
+      forgotPasswordDto
+    );
+    return response.data;
+  };
+
+
+  const validateToken = async (
+    validateToken: ValidateToken
+  ): Promise<boolean> => {
+    const response = await api.post(
+      `api/v1/forget-password/validate-token`,
+      validateToken
+    );
+
+
+
+    console.log(validateToken, "data post kr rha hoon backend pe ")
+
+
+
+    return response.data;
+  }
+
+
   const deleteUser = async (id: string): Promise<any> => {
     const response = await api.delete(`api/v1/users/delete-user/${id}`);
     return response.data;
@@ -246,6 +287,9 @@ const createBackendServer = (baseURL: string) => {
   return {
     authLogin,
     authRegister,
+    requestPasswordReset,
+    forgotPassword,
+    validateToken,
     getCountOfNewPatientsByLocation,
     getSumOfNewPatientsByLocation,
     getCountOfNewPatientsByAttorney,
@@ -269,6 +313,7 @@ const createBackendServer = (baseURL: string) => {
     deleteUser,
     getRoles,
     resetPassword,
+
   };
 };
 

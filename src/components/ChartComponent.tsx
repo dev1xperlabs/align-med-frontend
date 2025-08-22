@@ -179,9 +179,11 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
       // Original logic for location data and settlements by month/week/year
       const labels = data.map((item) => {
         const value = item[primaryKey];
+        console.log(typeof value === "string", item, "period in charts");
         if (typeof value === "string" && value.includes("/")) {
           try {
             const date = new Date(value);
+            console.log(date, "date issue");
             return date.toLocaleDateString("en-US", {
               month: "short",
               day: "numeric",

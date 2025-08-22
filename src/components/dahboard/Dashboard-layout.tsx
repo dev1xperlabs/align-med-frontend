@@ -22,6 +22,11 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
   useEffect(() => {
     window.dispatchEvent(new Event("resize"));
+    if (sidebarOpen) {
+      document.documentElement.style.setProperty("--sidebar-width", "339px");
+    } else {
+      document.documentElement.style.setProperty("--sidebar-width", "120px");
+    }
   }, [sidebarOpen]);
 
   return (

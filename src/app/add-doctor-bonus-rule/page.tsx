@@ -21,6 +21,7 @@ import {
   TextField,
   useTheme,
   FormHelperText,
+  Tooltip,
 } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
 import {
@@ -642,26 +643,30 @@ export default function AddDoctorBonusRulePage() {
                               justifyContent: "center",
                             }}
                           >
-                            <IconButton
-                              size="small"
-                              onClick={() => handleOpenDialog(rule)}
-                              sx={{ color: "#666" }}
-                            >
-                              <Edit fontSize="small" />
-                            </IconButton>
-                            <IconButton
-                              size="small"
-                              onClick={() =>
-                                handleDeleteRule(
-                                  rule.id,
-                                  doctorMap.get(rule.provider_id) ||
-                                    "Unknown Doctor"
-                                )
-                              }
-                              sx={{ color: "#d32f2f" }}
-                            >
-                              <Delete fontSize="small" />
-                            </IconButton>
+                            <Tooltip title="Edit Rule" arrow>
+                              <IconButton
+                                size="small"
+                                onClick={() => handleOpenDialog(rule)}
+                                sx={{ color: "#666" }}
+                              >
+                                <Edit fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Delete Rule" arrow>
+                              <IconButton
+                                size="small"
+                                onClick={() =>
+                                  handleDeleteRule(
+                                    rule.id,
+                                    doctorMap.get(rule.provider_id) ||
+                                      "Unknown Doctor"
+                                  )
+                                }
+                                sx={{ color: "#d32f2f" }}
+                              >
+                                <Delete fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
                           </Box>
                         </TableCell>
                       </TableRow>

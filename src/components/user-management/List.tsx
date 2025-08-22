@@ -8,8 +8,16 @@ import {
   TableRow,
   Typography,
   TablePagination,
+  Tooltip,
+  useTheme,
 } from "@mui/material";
-import { Delete, Edit, LockReset } from "@mui/icons-material";
+import {
+  Delete,
+  Edit,
+  LockReset,
+  Person,
+  Person2Outlined,
+} from "@mui/icons-material";
 import {
   StyledDashboardCard,
   StyledTable,
@@ -25,6 +33,7 @@ import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import { useUserData } from "@/hooks/use-user-data";
 
 type ListProps = {
   userListDto: UserListDto | undefined;
@@ -43,6 +52,10 @@ export const List = ({
   onUpdateUser,
   onResetPassword,
 }: ListProps) => {
+  const { user, isLoading } = useUserData();
+  const theme = useTheme();
+  const [loggedInUser, setLoggedInUser] = useState(user);
+
   const handleUpdateUser = (user: any) => {
     onUpdateUser(user);
   };
@@ -80,7 +93,10 @@ export const List = ({
     },
   });
 
-  console.log(userListDto, "data aa rha hy");
+  useEffect(() => {
+    setLoggedInUser(user);
+  }, [user]);
+
   return (
     <>
       <StyledDashboardCard>
@@ -110,6 +126,18 @@ export const List = ({
                   <TableRow key={user.id}>
                     <TableCell>
                       {user.firstname} {user.lastname}
+                      {user.id == loggedInUser?.id && (
+                        <Tooltip title="That's you!" arrow placement="top">
+                          <Person
+                            sx={{
+                              fontSize: 21,
+                              ml: 2,
+                              verticalAlign: "middle",
+                              color: theme.palette.primary.main,
+                            }}
+                          />
+                        </Tooltip>
+                      )}
                     </TableCell>
                     <TableCell>{user.email}</TableCell>
                     <TableCell>
@@ -142,29 +170,39 @@ export const List = ({
                               justifyContent: "center",
                             }}
                           >
-                            <IconButton
-                              size="small"
-                              onClick={() => handleUpdateUser(user)}
-                              sx={{ color: "#666" }}
-                            >
-                              <Edit fontSize="small" />
-                            </IconButton>
+                            <Tooltip title="Edit User" arrow placement="top">
+                              <IconButton
+                                size="small"
+                                onClick={() => handleUpdateUser(user)}
+                                sx={{ color: "#666" }}
+                              >
+                                <Edit fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
 
-                            <IconButton
-                              size="small"
-                              onClick={() => handleResetPassword(user)}
-                              sx={{ color: "#666" }}
+                            <Tooltip
+                              title="Reset Password"
+                              arrow
+                              placement="top"
                             >
-                              <LockReset fontSize="small" />
-                            </IconButton>
+                              <IconButton
+                                size="small"
+                                onClick={() => handleResetPassword(user)}
+                                sx={{ color: "#666" }}
+                              >
+                                <LockReset fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
 
-                            <IconButton
-                              size="small"
-                              onClick={() => handleDeleteUser(user)}
-                              sx={{ color: "#d32f2f" }}
-                            >
-                              <Delete fontSize="small" />
-                            </IconButton>
+                            <Tooltip title="Delete User" arrow placement="top">
+                              <IconButton
+                                size="small"
+                                onClick={() => handleDeleteUser(user)}
+                                sx={{ color: "#d32f2f" }}
+                              >
+                                <Delete fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
                           </Box>
                         )}
                       </TableCell>

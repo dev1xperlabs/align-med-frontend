@@ -122,7 +122,11 @@ export default function PatientIntakePage() {
           (key) => key !== primaryKey
         );
       }
-
+      if (groupBy === "attorneys") {
+        columns.sort(
+          (a, b) => parseInt(b.split(" ")[1]) - parseInt(a.split(" ")[1])
+        );
+      }
       return { results, count, primaryKey, columns };
     },
     enabled: !isLoadingAttorneys,

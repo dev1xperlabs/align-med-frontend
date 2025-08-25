@@ -1,8 +1,9 @@
 "use client";
-import { Box, TextField } from "@mui/material";
-import { StyledFormControl } from "@/components/styled";
+import { Box, IconButton, TextField, Tooltip } from "@mui/material";
+import { StyledFormControl, StyledIconFormControl } from "@/components/styled";
 import { tableStyles } from "@/styles";
 import { addDays } from "@/utils";
+import { RestartAlt } from "@mui/icons-material";
 
 interface DateRangeDropdownsProps {
   startDate?: string;
@@ -21,13 +22,29 @@ export default function DateRangeDropdowns({
   isEditable = false,
   groupBy = "",
 }: DateRangeDropdownsProps) {
+  const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+  const currentYear = new Date().getFullYear();
+
   const startMin =
-    groupBy !== "month" && endDate ? addDays(endDate, -365) : undefined;
+    groupBy !== "month" && endDate ? addDays(endDate, -364) : undefined;
   const startMax = groupBy !== "month" && endDate ? endDate : undefined;
 
   const endMin = groupBy !== "month" && startDate ? startDate : undefined;
-  const endMax =
-    groupBy !== "month" && startDate ? addDays(startDate, 365) : undefined;
+
+  let endMax: string | undefined = undefined;
+  if (groupBy !== "month" && startDate) {
+    const startYear = new Date(startDate).getFullYear();
+    if (startYear === currentYear) {
+      endMax = today;
+    } else {
+      endMax = addDays(startDate, 364);
+    }
+  }
+
+  const handleResetDates = () => {
+    onStartDateChange?.("");
+    onEndDateChange?.("");
+  };
 
   return (
     <Box sx={{ display: "flex", gap: 1 }}>
@@ -78,6 +95,19 @@ export default function DateRangeDropdowns({
           }}
         />
       </StyledFormControl>
+
+      <StyledIconFormControl>
+        <Tooltip title="Reset Date" arrow placement="top">
+          <IconButton
+            onClick={handleResetDates}
+            size="small"
+            color="primary"
+            disabled={!isEditable || (!startDate && !endDate)}
+          >
+            <RestartAlt fontSize="small" />
+          </IconButton>
+        </Tooltip>
+      </StyledIconFormControl>
     </Box>
   );
 }

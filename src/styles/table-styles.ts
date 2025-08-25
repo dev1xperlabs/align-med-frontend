@@ -67,7 +67,7 @@ export const tableStyles = {
     //   lg: 200,
     //   xl: 400,
     // },
-    width: 350,
+    width: 330,
     mb: 1,
     mt: "8px",
     "& .MuiInputBase-root": {

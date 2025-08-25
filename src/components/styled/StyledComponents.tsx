@@ -817,6 +817,15 @@ export const StyledFormControl = styled(FormControl)(({ theme }) => ({
     fontFamily: theme.typography.fontFamily,
   },
 }));
+export const StyledIconFormControl = styled(FormControl)(({ theme }) => ({
+  minWidth: 20,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  height: 40,
+  marginTop: "auto",
+  marginBottom: "auto",
+}));
 
 export const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
   minWidth: 180,

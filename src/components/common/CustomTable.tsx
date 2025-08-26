@@ -123,8 +123,8 @@ export default function CustomTable({
               </Box>
             ))}
             <DateRangeDropdowns
-              startDate={startDate}
-              endDate={endDate}
+              startDate={startDate ?? undefined}
+              endDate={endDate ?? undefined}
               onStartDateChange={onStartDateChange}
               onEndDateChange={onEndDateChange}
               isEditable={isCustomDateRange}

@@ -71,28 +71,37 @@ export const formatDatePretty = (dateString: string) => {
 
 
 
-export const getDateRangeFromGroupBy = (
-  period: string,
-  startDate?: string,
-  endDate?: string
-) => {
+// export const getDateRangeFromGroupBy = (
+//   period: string,
+//   startDate?: string,
+//   endDate?: string
+// ) => {
+//   if (startDate && endDate) {
+//     return { start_date: startDate, end_date: endDate };
+//   }
+
+//   switch (period) {
+//     case "Date":
+//       return getDateRange("Today");
+//     case "Week":
+//       return getDateRange("This Week");
+//     case "Month":
+//       return getDateRange("This Month");
+//     case "Year":
+//       return getDateRange("This Year");
+//     default:
+//       return getDateRange("This Month");
+//   }
+// };
+
+
+export const getDateRangeFromGroupBy = (period: string, startDate?: string, endDate?: string) => {
   if (startDate && endDate) {
-    return { start_date: startDate, end_date: endDate };
+    return { start_date: startDate, end_date: endDate }
   }
 
-  switch (period) {
-    case "Date":
-      return getDateRange("Today");
-    case "Week":
-      return getDateRange("This Week");
-    case "Month":
-      return getDateRange("This Month");
-    case "Year":
-      return getDateRange("This Year");
-    default:
-      return getDateRange("This Month");
-  }
-};
+  return null
+}
 
 
 export const getApiGroupBy = (period: string): string => {

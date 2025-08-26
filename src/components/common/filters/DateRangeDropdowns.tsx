@@ -48,66 +48,72 @@ export default function DateRangeDropdowns({
 
   return (
     <Box sx={{ display: "flex", gap: 1 }}>
-      <StyledFormControl size="medium" sx={tableStyles.filterFormControl}>
-        <TextField
-          label="Start Date"
-          type="date"
-          value={startDate}
-          onChange={(e) => onStartDateChange?.(e.target.value)}
-          disabled={!isEditable}
-          size="small"
-          InputLabelProps={{ shrink: true }}
-          inputProps={{
-            min: startMin,
-            max: startMax,
-          }}
-          sx={{
-            minHeight: 40,
-            fontSize: 14,
-            minWidth: 120,
-            "& .MuiInputBase-input": {
-              color: isEditable ? "inherit" : "text.secondary",
-            },
-          }}
-        />
-      </StyledFormControl>
+      {isEditable && (
+        <>
+          <StyledFormControl size="medium" sx={tableStyles.filterFormControl}>
+            <TextField
+              label="Start Date"
+              type="date"
+              value={startDate}
+              onChange={(e) => onStartDateChange?.(e.target.value)}
+              disabled={!isEditable}
+              size="small"
+              InputLabelProps={{ shrink: true }}
+              inputProps={{
+                min: startMin,
+                max: startMax,
+                onPointerEnter: (e: any) => (e.currentTarget.title = ""),
+              }}
+              sx={{
+                minHeight: 40,
+                fontSize: 14,
+                minWidth: 120,
+                "& .MuiInputBase-input": {
+                  color: isEditable ? "inherit" : "text.secondary",
+                },
+              }}
+            />
+          </StyledFormControl>
 
-      <StyledFormControl size="medium" sx={tableStyles.filterFormControl}>
-        <TextField
-          label="End Date"
-          type="date"
-          value={endDate}
-          onChange={(e) => onEndDateChange?.(e.target.value)}
-          disabled={!isEditable}
-          size="small"
-          InputLabelProps={{ shrink: true }}
-          inputProps={{
-            min: endMin,
-            max: endMax,
-          }}
-          sx={{
-            minHeight: 40,
-            fontSize: 14,
-            minWidth: 120,
-            "& .MuiInputBase-input": {
-              color: isEditable ? "inherit" : "text.secondary",
-            },
-          }}
-        />
-      </StyledFormControl>
+          <StyledFormControl size="medium" sx={tableStyles.filterFormControl}>
+            <TextField
+              label="End Date"
+              type="date"
+              value={endDate}
+              onChange={(e) => onEndDateChange?.(e.target.value)}
+              disabled={!isEditable}
+              size="small"
+              InputLabelProps={{ shrink: true }}
+              inputProps={{
+                min: endMin,
+                max: endMax,
+                onPointerEnter: (e: any) => (e.currentTarget.title = ""),
+              }}
+              sx={{
+                minHeight: 40,
+                fontSize: 14,
+                minWidth: 120,
+                "& .MuiInputBase-input": {
+                  color: isEditable ? "inherit" : "text.secondary",
+                },
+              }}
+            />
+          </StyledFormControl>
 
-      <StyledIconFormControl>
-        <Tooltip title="Reset Date" arrow placement="top">
-          <IconButton
-            onClick={handleResetDates}
-            size="small"
-            color="primary"
-            disabled={!isEditable || (!startDate && !endDate)}
-          >
-            <RestartAlt fontSize="small" />
-          </IconButton>
-        </Tooltip>
-      </StyledIconFormControl>
+          <StyledIconFormControl>
+            <Tooltip title="Reset Date" arrow placement="top">
+              <IconButton
+                onClick={handleResetDates}
+                size="small"
+                color="primary"
+                disabled={!isEditable || (!startDate && !endDate)}
+              >
+                <RestartAlt fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          </StyledIconFormControl>
+        </>
+      )}
     </Box>
   );
 }

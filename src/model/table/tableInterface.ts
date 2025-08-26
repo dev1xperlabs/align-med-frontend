@@ -23,8 +23,8 @@ export interface GenericTableProps {
     pageType?: "patient-intake" | "settlements";
     isLoading?: boolean;
     dateRange?: string
-    startDate?: string
-    endDate?: string
+    startDate?: string | null;
+    endDate?: string | null;
     onDateRangeChange?: (value: string) => void
     onStartDateChange?: (date: string) => void
     onEndDateChange?: (date: string) => void

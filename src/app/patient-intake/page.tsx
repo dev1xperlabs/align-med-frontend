@@ -135,9 +135,15 @@ export default function PatientIntakePage() {
         );
       }
       if (groupBy === "attorneys") {
-        columns.sort(
-          (a, b) => parseInt(b.split(" ")[1]) - parseInt(a.split(" ")[1])
-        );
+        columns.sort((a, b) => {
+          const [, weekA, yearA] = a.split(/\s+/);
+          const [, weekB, yearB] = b.split(/\s+/);
+
+          const yearDiff = parseInt(yearB) - parseInt(yearA);
+          if (yearDiff !== 0) return yearDiff;
+
+          return parseInt(weekB) - parseInt(weekA);
+        });
       }
       return { results, count, primaryKey, columns };
     },

@@ -35,7 +35,12 @@ export const MetricsGrid: React.FC<MetricsGridProps> = ({
         <MetricCard
           key={`${metric.title}-${index}`}
           {...metric}
-          sx={{ minHeight: 150 }}
+          sx={{
+            minHeight: 150,
+            "@media (max-width: 1366px)": {
+              minHeight: 130,
+            },
+          }}
         />
       ))}
     </Box>

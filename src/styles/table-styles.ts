@@ -68,6 +68,9 @@ export const tableStyles = {
     //   xl: 400,
     // },
     width: 330,
+    "@media (max-width: 1366px)": {
+      width: 300,
+    },
     mb: 1,
     mt: "8px",
     "& .MuiInputBase-root": {

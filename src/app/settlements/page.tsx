@@ -254,7 +254,13 @@ export default function SettlementsPage() {
       baseFilters.push({
         key: "dateRange",
         label: "Date Range",
-        options: ["Today", "This Week", "This Month", "This Year", "Custom"],
+        options: [
+          "Yesterday",
+          "This Week",
+          "This Month",
+          "This Year",
+          "Custom",
+        ],
         value: dateRange,
         onChange: (val: string | string[]) => {
           const newDateRange = Array.isArray(val) ? val[0] : val;

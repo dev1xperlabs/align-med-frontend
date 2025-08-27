@@ -11,7 +11,7 @@ export const transformPatientCountData = (data: any): MetricData[] => {
 
     return [
         {
-            title: "Today",
+            title: "Yesterday",
             value: data.new_patients_today || 0,
             change: data.percentage_today || 0,
             trend: data.trend_today,
@@ -47,7 +47,7 @@ export const transformBillingData = (data: any): MetricData[] => {
 
     return [
         {
-            title: "Today",
+            title: "Yesterday",
             value: formatCurrencyCompact(data.total_billed_today || "0"),
             change: data.percentage_today || 0,
             trend: data.trend_today,
@@ -82,7 +82,7 @@ export const transformSettlementsBillingCards = (data: any): MetricData[] => {
     console.log("Transforming patient settlements data:", data)
     return [
         {
-            title: "Today",
+            title: "Yesterday",
             value: formatCurrencyCompact(data.total_billed_today || "0"),
             change: data.percentage_today || 0,
             trend: data.trend_today,

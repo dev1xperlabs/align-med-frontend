@@ -306,7 +306,7 @@ export default function PatientIntakePage() {
               key: "dateRange",
               label: "Date Range",
               options: [
-                "Today",
+                "Yesterday",
                 "This Week",
                 "This Month",
                 "This Year",

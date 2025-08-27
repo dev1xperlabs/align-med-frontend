@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { Card, CardContent, Typography, Box } from "@mui/material";
+import { Card, CardContent, Typography, Box, useTheme } from "@mui/material";
 import { TrendingUp, TrendingDown } from "@mui/icons-material";
 import { green, red, grey } from "@mui/material/colors";
 import { MuiRouteDisplay } from "./route-display-mui";
@@ -32,6 +32,7 @@ export const MetricCard: React.FC<MetricCardProps> = ({
     return `${Math.abs(change)}%`;
   };
 
+  const theme = useTheme();
   const getTrendColor = (trend: "up" | "down" | "neutral") => {
     switch (trend) {
       case "up":
@@ -84,6 +85,9 @@ export const MetricCard: React.FC<MetricCardProps> = ({
                 fontWeight: "bold",
                 color: "text.primary",
                 fontSize: "2.5rem",
+                "@media (max-width: 1366px)": {
+                  fontSize: "1.8rem",
+                },
               }}
             >
               {value}

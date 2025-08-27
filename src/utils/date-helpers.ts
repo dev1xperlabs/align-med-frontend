@@ -7,12 +7,14 @@ export const getDateRange = (period: string) => {
   const formatDateLocal = (date: Date) =>
     date.toLocaleDateString("en-CA");
 
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1)
 
   switch (period) {
-    case "Today": {
+    case "Yesterday": {
       return {
-        start_date: formatDateLocal(today),
-        end_date: formatDateLocal(today),
+        start_date: formatDateLocal(yesterday),
+        end_date: formatDateLocal(yesterday),
       };
     }
 
@@ -26,7 +28,7 @@ export const getDateRange = (period: string) => {
 
       return {
         start_date: formatDateLocal(weekStart),
-        end_date: formatDateLocal(today),
+        end_date: formatDateLocal(yesterday),
       };
     }
 
@@ -34,7 +36,7 @@ export const getDateRange = (period: string) => {
       const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
       return {
         start_date: formatDateLocal(monthStart),
-        end_date: formatDateLocal(today),
+        end_date: formatDateLocal(yesterday),
       };
     }
 
@@ -42,14 +44,14 @@ export const getDateRange = (period: string) => {
       const yearStart = new Date(today.getFullYear(), 0, 1);
       return {
         start_date: formatDateLocal(yearStart),
-        end_date: formatDateLocal(today),
+        end_date: formatDateLocal(yesterday),
       };
     }
 
     default: {
       return {
-        start_date: formatDateLocal(today),
-        end_date: formatDateLocal(today),
+        start_date: formatDateLocal(yesterday),
+        end_date: formatDateLocal(yesterday),
       };
     }
   }
@@ -109,6 +111,8 @@ export const getDateRangeFromGroupBy = (
 
   return null
 }
+
+
 
 export const getApiGroupBy = (period: string): string => {
   switch (period) {

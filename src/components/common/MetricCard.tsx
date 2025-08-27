@@ -109,6 +109,9 @@ export const MetricCard: React.FC<MetricCardProps> = ({
                   sx={{
                     fontSize: "0.75rem",
                     fontWeight: 500,
+                    "@media (max-width: 1366px)": {
+                      fontSize: "0.60rem",
+                    },
                     color: getTrendColor(trend),
                   }}
                 >

@@ -95,14 +95,20 @@ export const formatDatePretty = (dateString: string) => {
 // };
 
 
-export const getDateRangeFromGroupBy = (period: string, startDate?: string, endDate?: string) => {
-  if (startDate && endDate) {
-    return { start_date: startDate, end_date: endDate }
+export const getDateRangeFromGroupBy = (
+  period: string,
+  startDate?: string,
+  endDate?: string
+) => {
+  if (startDate || endDate) {
+    return {
+      ...(startDate && { start_date: startDate }),
+      ...(endDate && { end_date: endDate }),
+    }
   }
 
   return null
 }
-
 
 export const getApiGroupBy = (period: string): string => {
   switch (period) {

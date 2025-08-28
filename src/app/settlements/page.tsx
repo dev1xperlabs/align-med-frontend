@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { Box } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 
@@ -32,6 +32,12 @@ export default function SettlementsPage() {
   const [viewType, setViewType] = useState<"table" | "graph">("table");
 
   const [groupByPeriod, setGroupByPeriod] = useState<string>("Week");
+  const [groupByPeriodOptions, setGroupByPeriodOptions] = useState<string[]>([
+    "Year",
+    "Month",
+    "Week",
+    "Date",
+  ]);
 
   const [dateRange, setDateRange] = useState<string>("This Year");
   const [selectedAttorneys, setSelectedAttorneys] = useState<string[]>([]);
@@ -40,6 +46,49 @@ export default function SettlementsPage() {
 
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
+
+  useEffect(() => {
+    if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+
+      const sameYear = start.getFullYear() === end.getFullYear();
+      const sameMonth = sameYear && start.getMonth() === end.getMonth();
+
+      const getWeekNumber = (d: Date) => {
+        const date = new Date(
+          Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())
+        );
+        const dayNum = date.getUTCDay() || 7;
+        date.setUTCDate(date.getUTCDate() + 4 - dayNum);
+        const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+        return Math.ceil(((+date - +yearStart) / 86400000 + 1) / 7);
+      };
+
+      const sameWeek = sameYear && getWeekNumber(start) === getWeekNumber(end);
+
+      if (sameWeek) {
+        setGroupByPeriodOptions(["Date"]);
+        if (groupByPeriod !== "Date") {
+          setGroupByPeriod("Date");
+        }
+      } else if (sameMonth) {
+        setGroupByPeriodOptions(["Week", "Date"]);
+        if (!["Week", "Date"].includes(groupByPeriod)) {
+          setGroupByPeriod("Date");
+        }
+      } else if (sameYear) {
+        setGroupByPeriodOptions(["Month", "Week", "Date"]);
+        if (!["Month", "Week", "Date"].includes(groupByPeriod)) {
+          setGroupByPeriod("Date");
+        }
+      } else {
+        setGroupByPeriodOptions(["Year", "Month", "Week", "Date"]);
+      }
+    } else {
+      setGroupByPeriodOptions(["Year", "Month", "Week", "Date"]);
+    }
+  }, [startDate, endDate, groupByPeriod]);
 
   const { data: metricsData, isLoading: isLoadingMetrics } = useQuery({
     queryKey: ["settlementsBillingCards"],
@@ -242,7 +291,7 @@ export default function SettlementsPage() {
       baseFilters.push({
         key: "groupByPeriod",
         label: "Group By",
-        options: ["Year", "Month", "Week", "Date"],
+        options: groupByPeriodOptions,
         value: groupByPeriod,
         onChange: (val: string | string[]) => {
           setGroupByPeriod(Array.isArray(val) ? val[0] : val);
@@ -277,7 +326,14 @@ export default function SettlementsPage() {
     }
 
     return baseFilters;
-  }, [groupBy, groupByPeriod, dateRange, selectedAttorneys, attorneyOptions]);
+  }, [
+    groupBy,
+    groupByPeriod,
+    groupByPeriodOptions,
+    dateRange,
+    selectedAttorneys,
+    attorneyOptions,
+  ]);
 
   const handleStartDateChange = useCallback((date: string) => {
     setStartDate(date);

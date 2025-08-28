@@ -13,8 +13,9 @@ export const AlignLogo = ({ collapsed = false, width, height }: LogoProps) => (
   <StyledLogoContainer
     sx={{
       justifyContent: collapsed ? "center" : "flex-start",
-      height: collapsed ? 40 : 84,
+      height: collapsed ? 40 : 70,
       marginTop: collapsed ? 0 : 5,
+      transition: "all 0.3s ease-in-out",
     }}
   >
     {collapsed ? (
@@ -25,16 +26,18 @@ export const AlignLogo = ({ collapsed = false, width, height }: LogoProps) => (
         height={height || 32}
         style={{
           objectFit: "contain",
+          transition: "all 0.3s ease-in-out",
         }}
       />
     ) : (
       <Image
         src="/images/logo.png"
         alt="Align Logo"
-        width={width || 212}
-        height={height || 84}
+        width={width || 200}
+        height={height || 70}
         style={{
           objectFit: "contain",
+          transition: "all 0.3s ease-in-out",
           // width: "75%",
           // height: "90%",
           // position: "fixed",

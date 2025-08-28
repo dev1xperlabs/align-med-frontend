@@ -31,7 +31,7 @@ export default function SettlementsPage() {
   const [groupBy, setGroupBy] = useState<"month" | "attorneys">("month");
   const [viewType, setViewType] = useState<"table" | "graph">("table");
 
-  const [groupByPeriod, setGroupByPeriod] = useState<string>("Week");
+  const [groupByPeriod, setGroupByPeriod] = useState<string>("Date");
   const [groupByPeriodOptions, setGroupByPeriodOptions] = useState<string[]>([
     "Year",
     "Month",
